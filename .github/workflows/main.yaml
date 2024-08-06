@@ -4,14 +4,27 @@ on: [push]
 jobs:
   Explore-GitHub-Actions:
     runs-on: ubuntu-latest
+
+    environment: dev
+
     steps:
       - run: echo "🎉 The job was automatically triggered by a ${{ github.event_name }} event."
       - run: echo "🐧 This job is now running on a ${{ runner.os }} server hosted by GitHub!"
       - run: echo "🔎 The name of your branch is ${{ github.ref }} and your repository is ${{ github.repository }}."
+      - run: echo "🔎 The name of your environment is ${{ job.environment }} and your repository is ${{ github.repository }}."
       - name: Check out repository code
         uses: actions/checkout@v4
       - run: echo "💡 The ${{ github.repository }} repository has been cloned to the runner."
       - uses: hashicorp/setup-terraform@v3
         with:
           terraform_version: "1.9.3"
-      - run: terraform init
+      # - run: |
+      #     terraform init \
+      #       -backend-config="resource_group_name=${{ secrets.RESOURCE_GROUP_NAME }}" \
+      #       -backend-config="storage_account_name=${{ secrets.STORAGE_ACCOUNT_NAME }}" \
+      #       -backend-config="container_name=${{ secrets.STORAGE_ACCOUNT_NAME }}" \
+      #       -backend-config="key=${{ parameters.remote_backend_key }}" \
+      #       -backend-config="subscription_id=$(az account show --query id --output tsv)" \
+      #       -backend-config="tenant_id=$tenantId" \
+      #       -backend-config="client_id=$servicePrincipalId" \
+      #       -backend-config="client_secret=$servicePrincipalKey" \
