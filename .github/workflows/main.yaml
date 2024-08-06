@@ -22,6 +22,21 @@ jobs:
         uses: azure/login@v2
         with:
           creds: ${{ secrets.AZURE_CREDENTIALS }}
+      
+      - name: Azure CLI script
+        uses: azure/cli@v2
+        with:
+          azcliversion: latest
+          inlineScript: |
+            terraform init \
+              -backend-config="resource_group_name=${{ secrets.RESOURCE_GROUP_NAME }}" \
+              -backend-config="storage_account_name=${{ secrets.STORAGE_ACCOUNT_NAME }}" \
+              -backend-config="container_name=${{ secrets.STORAGE_ACCOUNT_NAME }}dev" \
+              -backend-config="key=tfstatedev" \
+              -backend-config="subscription_id=$(az account show --query id --output tsv)" \
+              -backend-config="tenant_id=$tenantId" \
+              -backend-config="client_id=$servicePrincipalId" \
+              -backend-config="client_secret=$servicePrincipalKey" \
 
       # - run: |
       #     terraform init \
