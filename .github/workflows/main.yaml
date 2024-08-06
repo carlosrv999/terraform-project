@@ -29,7 +29,17 @@ jobs:
             -backend-config="tenant_id=${{ secrets.TENANT_ID }}" \
             -backend-config="client_id=${{ secrets.AZURE_CLIENT_ID }}" \
             -backend-config="client_secret=${{ secrets.AZURE_CLIENT_SECRET }}" \
+      
+      - run: |
+          terraform plan \
+            -input=false \
+            -out=tfplan
 
+      - run: |
+          terraform apply \
+            -input=false \
+            -auto-approve \
+            tfplan
       # - run: |
       #     terraform init \
       #       -backend-config="resource_group_name=${{ secrets.RESOURCE_GROUP_NAME }}" \
